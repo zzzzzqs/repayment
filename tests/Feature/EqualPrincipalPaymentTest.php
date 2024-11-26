@@ -1,15 +1,18 @@
 <?php
 
-namespace Zzzzzqs\Repayment\Tests;
+namespace Zzzzzqs\Repayment\Tests\Feature;
 
-use PHPUnit\Framework\TestCase;
 use Zzzzzqs\Repayment\Contracts\PaymentCalculatorInterface;
-use Zzzzzqs\Repayment\EqualPrincipalPaymentCalculator;
+use Zzzzzqs\Repayment\Tests\TestCase;
+use function app;
+use function collect;
+use function config;
 
 class EqualPrincipalPaymentTest extends TestCase
 {
     public function test_config_repayment()
     {
+        // 断言是否能读到配置
         $this->assertEquals('2', config('repayment.digit'));
     }
 

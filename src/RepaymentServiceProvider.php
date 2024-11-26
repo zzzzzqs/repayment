@@ -25,16 +25,17 @@ class RepaymentServiceProvider extends ServiceProvider implements DeferrableProv
 
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/../config/repayment.php' => config_path('repayment.php'),
-        ]);
+        $path =__DIR__ . '/../config/repayment.php';
+        $this->publishes([$path => config_path('repayment.php')], 'config');
+
+        $this->mergeConfigFrom($path, 'repayment');
     }
 
     /**
      * 延迟加载
      * @return array
      */
-    public function provides()
+    public function provides(): array
     {
         return [PaymentCalculatorInterface::class];
     }
