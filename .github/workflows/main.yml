@@ -21,7 +21,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_version }}
-          extensions: bcmath
+          extensions: mbstring, json, bcmath
           coverage: xdebug
 
       # 3. 安装 Composer 依赖
