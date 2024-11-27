@@ -37,10 +37,10 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "@php artisan vendor:publish --tag=config --ansi"
+            "@php artisan vendor:publish --provider=\"Zzzzzqs\\Repayment\\RepaymentServiceProvider\""
         ],
         "post-update-cmd": [
-            "@php artisan vendor:publish --tag=config --ansi"
+            "@php artisan vendor:publish --provider=\"Zzzzzqs\\Repayment\\RepaymentServiceProvider\""
         ]
     }
 }

@@ -34,7 +34,7 @@ class EqualPrincipalPaymentCalculator extends PaymentCalculatorAbstract implemen
     public function monthlyInterest($repaidPrincipal): string
     {
         // 每月利息 = ( 本金 - 累计已还本金 ) * 月利率
-        return bcmul(bcsub($this->principal, $repaidPrincipal, $this->decimalDigits), $this->monthInterestRate, $this->decimalDigits);
+        return bcmul(bcsub($this->principal, $repaidPrincipal, $this->decimalDigits + 6), $this->monthInterestRate, $this->decimalDigits);
     }
 
     /**
@@ -44,16 +44,17 @@ class EqualPrincipalPaymentCalculator extends PaymentCalculatorAbstract implemen
     public function getTotalInterest(): string
     {
         // 还款总利息 = ( 还款月数 + 1 ) * 本金 * 月利率 / 2
+        $digit = $this->decimalDigits + 5;
         return
             bcdiv( // ( 还款月数 + 1 ) * 本金 * 月利率 / 2
                 bcmul(
                     bcmul( // ( 还款月数 + 1 ) * 本金
                         $this->totalPeriod + 1,
                         $this->principal,
-                        $this->decimalDigits
+                        $digit
                     ),
                     $this->monthInterestRate,
-                    $this->decimalDigits
+                    $digit
                 ),
                 2,
                 $this->decimalDigits
@@ -67,11 +68,16 @@ class EqualPrincipalPaymentCalculator extends PaymentCalculatorAbstract implemen
     public function getResult(): array
     {
         $paymentPlanLists = [];
-        $monthlyPaymentPrincipal = $this->monthlyPrincipal(); // 每月还款本金
-        $totalInterest = $this->getTotalInterest(); // 总还款利息
-        $repaidPrincipal = 0; // 已还本金
-        $repaidInterest = 0; // 已还利息
-        $period = 0; // 期数
+        // 每月还款本金
+        $monthlyPaymentPrincipal = $this->monthlyPrincipal();
+        // 总还款利息
+        $totalInterest = $this->getTotalInterest();
+        // 已还本金
+        $repaidPrincipal = 0;
+        // 已还利息
+        $repaidInterest = 0;
+        // 期数
+        $period = 0;
 
         for($i = 0; $i < $this->totalPeriod; $i ++) {
             $period ++;
@@ -85,11 +91,17 @@ class EqualPrincipalPaymentCalculator extends PaymentCalculatorAbstract implemen
                 $monthlyInterest = bcsub($totalInterest, $repaidInterest, $this->decimalDigits);
             }
 
-            $repaidPrincipal = bcadd($repaidPrincipal, $monthlyPaymentPrincipal, $this->decimalDigits); // 已还本金
-            $repaidInterest = bcadd($repaidInterest, $monthlyInterest, $this->decimalDigits); // 已支付利息
-            $rowRemainPrincipal = bcsub($this->principal, $repaidPrincipal, $this->decimalDigits); // 剩余还款本金
-            $rowRemainInterest = bcsub($totalInterest, $repaidInterest, $this->decimalDigits); // 剩余还款利息
-            $rowTotalMoney = bcadd($monthlyPaymentPrincipal, $monthlyInterest, $this->decimalDigits); // 本期还款总额
+            // 已还本金
+            $repaidPrincipal = bcadd($repaidPrincipal, $monthlyPaymentPrincipal, $this->decimalDigits);
+            // 已支付利息
+            $repaidInterest = bcadd($repaidInterest, $monthlyInterest, $this->decimalDigits);
+
+            // 剩余还款本金
+            $rowRemainPrincipal = bcsub($this->principal, $repaidPrincipal, $this->decimalDigits);
+            // 剩余还款利息
+            $rowRemainInterest = bcsub($totalInterest, $repaidInterest, $this->decimalDigits);
+            // 本期还款总额
+            $rowTotalMoney = bcadd($monthlyPaymentPrincipal, $monthlyInterest, $this->decimalDigits);
 
             $paymentPlanLists[$period] = $this->returnFormal($period, $monthlyPaymentPrincipal, $monthlyInterest, $rowTotalMoney, $rowRemainPrincipal, $rowRemainInterest);
         }
