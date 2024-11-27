@@ -1,4 +1,5 @@
-
+### Description
+laravel package for calculating equal principal interest and equal principal repayment
 
 ### Installation
 

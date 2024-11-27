@@ -1,6 +1,6 @@
 {
     "name": "zzzzzqs/repayment",
-    "description": "A php package for repayment calculation",
+    "description": "laravel package for calculating equal principal interest and equal principal repayment",
     "license": "MIT",
     "authors": [
         {
