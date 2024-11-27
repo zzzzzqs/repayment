@@ -1,4 +1,4 @@
-name: Tests
+name: Run Tests
 
 on:
   push:
@@ -9,21 +9,27 @@ jobs:
   phpunit:
     strategy:
       matrix:
-        # 需要在以下 PHP 版本中测试
         php_version: [8.0, 8.1, 8.2]
     runs-on: ubuntu-latest
+
     steps:
-      # 检出代码
+      # 1. 检出代码仓库
       - uses: actions/checkout@v2
-      # 初始化 PHP 环境
-      - name: Setup PHP environment
+
+      # 2. 设置 PHP 环境
+      - name: Setup PHP with extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php_version }}
+          extensions: bcmath
           coverage: xdebug
-      # 安装 composer 依赖
-      - name: Install dependencies
-        run: composer install
-      # 执行 PHPUnit 测试
-      - name: PHPUnit check
-        run: ./vendor/bin/phpunit --coverage-text
+
+      # 3. 安装 Composer 依赖
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+        env:
+          COMPOSER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 4. 运行 PHPUnit 测试
+      - name: Run PHPUnit tests
+        run: ./vendor/bin/phpunit --coverage-text --colors=never
