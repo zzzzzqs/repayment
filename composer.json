@@ -34,13 +34,5 @@
                 "Repayment": "Zzzzzqs\\Repayment\\Facades\\Repayment"
             }
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "@php artisan vendor:publish --provider=\"Zzzzzqs\\Repayment\\RepaymentServiceProvider\""
-        ],
-        "post-update-cmd": [
-            "@php artisan vendor:publish --provider=\"Zzzzzqs\\Repayment\\RepaymentServiceProvider\""
-        ]
     }
 }
