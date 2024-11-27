@@ -1,9 +1,12 @@
-### Description
-laravel package for calculating equal principal interest and equal principal repayment
+# Repayment #
+
+[![Run Tests](https://github.com/zzzzzqs/repayment/actions/workflows/main.yml/badge.svg)](https://github.com/zzzzzqs/repayment/actions/workflows/main.yml)
+
+A laravel package for calculating equal principal interest and equal principal repayment.
 
 ### Installation
 
-If you're using Composer to manage dependencies, you can use
+If you're using Composer to manage dependencies, you can use:
 
     composer require zzzzzqs/repayment
 
