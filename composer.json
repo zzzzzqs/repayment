@@ -29,10 +29,7 @@
         "laravel": {
             "providers": [
                 "Zzzzzqs\\Repayment\\RepaymentServiceProvider"
-            ],
-            "aliases": {
-                "Repayment": "Zzzzzqs\\Repayment\\Facades\\Repayment"
-            }
+            ]
         }
     }
 }

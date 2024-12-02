@@ -4,7 +4,7 @@ namespace Zzzzzqs\Repayment;
 
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
-use Zzzzzqs\Repayment\Contracts\PaymentCalculatorInterface;
+use Zzzzzqs\Repayment\Factories\PaymentCalculatorFactory;
 
 class RepaymentServiceProvider extends ServiceProvider implements DeferrableProvider
 {
@@ -14,12 +14,8 @@ class RepaymentServiceProvider extends ServiceProvider implements DeferrableProv
      */
     public function register()
     {
-        $this->app->singleton(PaymentCalculatorInterface::class, function ($app, $params) {
-            return match ($params[0]) {
-                'epc' => new EqualPrincipalPaymentCalculator($params[1], $params[2], $params[3]),
-                'etc' => new EqualTotalPaymentCalculator($params[1], $params[2], $params[3]),
-                default => '',
-            };
+        $this->app->singleton(PaymentCalculatorFactory::class, function () {
+            return new PaymentCalculatorFactory();
         });
     }
 
@@ -37,6 +33,6 @@ class RepaymentServiceProvider extends ServiceProvider implements DeferrableProv
      */
     public function provides(): array
     {
-        return [PaymentCalculatorInterface::class];
+        return [PaymentCalculatorFactory::class];
     }
 }

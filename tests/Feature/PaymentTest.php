@@ -2,7 +2,7 @@
 
 namespace Zzzzzqs\Repayment\Tests\Feature;
 
-use Zzzzzqs\Repayment\Contracts\PaymentCalculatorInterface;
+use Zzzzzqs\Repayment\Factories\PaymentCalculatorFactory;
 use Zzzzzqs\Repayment\Tests\TestCase;
 use function app;
 use function collect;
@@ -11,6 +11,13 @@ use function config;
 class PaymentTest extends TestCase
 {
     protected float $delta = 0.001;
+    protected $calculatorFactory;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->calculatorFactory = app(PaymentCalculatorFactory::class);
+    }
 
     public function test_config_repayment()
     {
@@ -24,9 +31,7 @@ class PaymentTest extends TestCase
      */
     public function test_epc($principal, $yearInterestRate, $year, $expectedTotalPrincipal, $expectedTotalInterest)
     {
-        $principal = app(PaymentCalculatorInterface::class, ['epc', $principal, $yearInterestRate, $year]);
-
-        $result = $principal->getResult();
+        $result = $this->calculatorFactory->create('epc', $principal, $yearInterestRate, $year)->getResult();
 
         $totalPrincipal = collect($result)->sum('total_money');
 //        $total_money = 0;
@@ -53,9 +58,7 @@ class PaymentTest extends TestCase
      */
     public function test_etc($principal, $yearInterestRate, $year, $expectedTotalPrincipal, $expectedTotalInterest)
     {
-        $principal = app(PaymentCalculatorInterface::class, ['etc', $principal, $yearInterestRate, $year]);
-
-        $result = $principal->getResult();
+        $result = $this->calculatorFactory->create('etc', $principal, $yearInterestRate, $year)->getResult();
 
         $totalPrincipal = collect($result)->sum('total_money');
         $totalInterest = collect($result)->sum('interest');

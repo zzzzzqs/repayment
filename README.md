@@ -35,13 +35,21 @@ You should now have a config/repayment.php file that allows you to configure the
     // epc means: matching the principal repayment 
     // etc means: average capital plus interest
 
-    $principal = 120000;
-    $yearInterestRate = "0.0486";
-    $year = 10;
+    public function __construct(PaymentCalculatorFactory $calculatorFactory)
+    {
+        $this->calculatorFactory = $calculatorFactory;
+    }
 
-    $principal = app(PaymentCalculatorInterface::class, ['epc', $principal, $yearInterestRate, $year]);
+    public function calculate($type, $principal, $interestRate, $years)
+    {
+        $calculator = $this->calculatorFactory->create($type, $principal, $interestRate, $years);
+        return $calculator->getResult();
+    }
 
-    $result = $principal->getResult();
+    // param like this:
+    // $principal = 120000;
+    // $yearInterestRate = "0.0486";
+    // $year = 10;
 
     // result is array like:
     [
