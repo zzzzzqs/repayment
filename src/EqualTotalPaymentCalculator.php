@@ -4,6 +4,8 @@ namespace Zzzzzqs\Repayment;
 
 use Zzzzzqs\Repayment\Abstracts\PaymentCalculatorAbstract;
 use Zzzzzqs\Repayment\Contracts\PaymentCalculatorInterface;
+use Zzzzzqs\Repayment\DTOs\RepaymentDTO;
+use Zzzzzqs\Repayment\DTOs\ScheduleItemDTO;
 
 /**
  * 等额本息还款
@@ -91,9 +93,9 @@ class EqualTotalPaymentCalculator extends PaymentCalculatorAbstract implements P
 
     /**
      * 获取等额本息还款计划
-     * @return array
+     * @return RepaymentDTO
      */
-    public function getResult(): array
+    public function getResult(): RepaymentDTO
     {
         $paymentPlanLists = [];
         // 每月还款总和
@@ -139,7 +141,18 @@ class EqualTotalPaymentCalculator extends PaymentCalculatorAbstract implements P
 
             // 返回每期还款计划
             $paymentPlanLists[$period] = $this->returnFormal($period, $monthlyPrincipal, $monthlyInterest, $monthlyPaymentMoney, $currentPrincipal, $rowRemainInterest);
+            $paymentPlanLists[] = new ScheduleItemDTO(
+                period: $period,
+                principal: $monthlyPrincipal,
+                interest: $monthlyInterest,
+                payment: $monthlyPaymentMoney,
+                remainingBalance: $currentPrincipal,
+                remainingInterest: $rowRemainInterest
+            );
         }
-        return $paymentPlanLists;
+
+        return new RepaymentDTO(
+            schedule: $paymentPlanLists
+        );
     }
 }

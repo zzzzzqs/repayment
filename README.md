@@ -51,7 +51,8 @@ You should now have a config/repayment.php file that allows you to configure the
     // $yearInterestRate = "0.0486";
     // $year = 10;
 
-    // result is array like:
+    // the result is a object like RepaymentDTO;
+    // if you want a array, you can $calculator->getSchedule return the new result like:
     [
         1 => [
             "period" => 1

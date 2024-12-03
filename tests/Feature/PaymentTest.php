@@ -5,7 +5,6 @@ namespace Zzzzzqs\Repayment\Tests\Feature;
 use Zzzzzqs\Repayment\Factories\PaymentCalculatorFactory;
 use Zzzzzqs\Repayment\Tests\TestCase;
 use function app;
-use function collect;
 use function config;
 
 class PaymentTest extends TestCase
@@ -33,12 +32,8 @@ class PaymentTest extends TestCase
     {
         $result = $this->calculatorFactory->create('epc', $principal, $yearInterestRate, $year)->getResult();
 
-        $totalPrincipal = collect($result)->sum('total_money');
-//        $total_money = 0;
-//        $totalPrincipal = collect($result)->sum(function ($item) use ($total_money) {
-//            return bcadd($item['total_money'], $total_money, 2);
-//        });
-        $totalInterest = collect($result)->sum('interest');
+        $totalPrincipal = $result->getTotalMoney();
+        $totalInterest = $result->getTotalInterest();
 
         $this->assertEqualsWithDelta($expectedTotalPrincipal, $totalPrincipal, $this->delta);
         $this->assertEqualsWithDelta($expectedTotalInterest, $totalInterest, $this->delta);
@@ -60,8 +55,8 @@ class PaymentTest extends TestCase
     {
         $result = $this->calculatorFactory->create('etc', $principal, $yearInterestRate, $year)->getResult();
 
-        $totalPrincipal = collect($result)->sum('total_money');
-        $totalInterest = collect($result)->sum('interest');
+        $totalPrincipal = $result->getTotalMoney();
+        $totalInterest = $result->getTotalInterest();
 
         $this->assertEqualsWithDelta($expectedTotalPrincipal, $totalPrincipal, $this->delta);
         $this->assertEqualsWithDelta($expectedTotalInterest, $totalInterest, $this->delta);
