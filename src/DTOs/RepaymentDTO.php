@@ -7,6 +7,8 @@ use JsonSerializable;
 class RepaymentDTO implements JsonSerializable
 {
     public function __construct(
+        private float $totalMoney,
+        private float $totalInterest,
         private array $schedule // 每期的还款计划
     ) {}
 
@@ -15,20 +17,28 @@ class RepaymentDTO implements JsonSerializable
         return $this->schedule;
     }
 
-    public function getTotalMoney()
+    public function getTotalMoney(): float
     {
-        return collect($this->schedule)->sum('total_money');
+        return $this->totalMoney;
     }
 
-    public function getTotalInterest()
+    public function getTotalInterest(): float
     {
-        return collect($this->schedule)->sum('interest');
+        return $this->totalInterest;
+    }
+
+    /**
+     * 转换为数组
+     */
+    public function toArray(): array
+    {
+        return [
+            'schedule' => array_map(fn($item) => $item->toArray(), $this->schedule)
+        ];
     }
 
     public function jsonSerialize(): array
     {
-        return [
-            'schedule' => array_map(fn($item) => $item->jsonSerialize(), $this->schedule)
-        ];
+        return $this->toArray();
     }
 } 

@@ -140,7 +140,6 @@ class EqualTotalPaymentCalculator extends PaymentCalculatorAbstract implements P
             $rowRemainInterest = max(bcsub($totalInterest, $repaidInterest, $this->decimalDigits), 0);
 
             // 返回每期还款计划
-            $paymentPlanLists[$period] = $this->returnFormal($period, $monthlyPrincipal, $monthlyInterest, $monthlyPaymentMoney, $currentPrincipal, $rowRemainInterest);
             $paymentPlanLists[] = new ScheduleItemDTO(
                 period: $period,
                 principal: $monthlyPrincipal,
@@ -152,6 +151,8 @@ class EqualTotalPaymentCalculator extends PaymentCalculatorAbstract implements P
         }
 
         return new RepaymentDTO(
+            totalMoney: bcadd($repaidPrincipal, $repaidInterest, 2),
+            totalInterest: $repaidInterest,
             schedule: $paymentPlanLists
         );
     }
