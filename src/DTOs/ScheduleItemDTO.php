@@ -45,14 +45,23 @@ class ScheduleItemDTO implements JsonSerializable
         return $this->remainingInterest ;
     }
 
-    public function jsonSerialize(): array
+    /**
+     * 转换为数组
+     */
+    public function toArray(): array
     {
         return [
             'period' => $this->period,
-            'principal' => number_format($this->principal, 2),
-            'interest' => number_format($this->interest, 2),
-            'payment' => number_format($this->payment, 2),
-            'remaining_balance' => number_format($this->remainingBalance, 2)
+            'principal' => round($this->principal, 2),
+            'interest' => round($this->interest, 2),
+            'payment' => round($this->payment, 2),
+            'remaining_balance' => round($this->remainingBalance, 2),
+            'remaining_interest' => round($this->remainingInterest, 2)
         ];
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
     }
 } 

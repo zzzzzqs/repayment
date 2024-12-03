@@ -105,19 +105,19 @@ class EqualPrincipalPaymentCalculator extends PaymentCalculatorAbstract implemen
             // 本期还款总额
             $rowTotalMoney = bcadd($monthlyPaymentPrincipal, $monthlyInterest, $this->decimalDigits);
 
-            $paymentPlanLists[$period] = $this->returnFormal($period, $monthlyPaymentPrincipal, $monthlyInterest, $rowTotalMoney, $rowRemainPrincipal, $rowRemainInterest);
-
             $paymentPlanLists[] = new ScheduleItemDTO(
                 period: $period,
                 principal: $monthlyPaymentPrincipal,
                 interest: $monthlyInterest,
-                payment: bcadd($repaidPrincipal, $repaidInterest, 2),
+                payment: $rowTotalMoney,
                 remainingBalance: $rowRemainPrincipal,
                 remainingInterest: $rowRemainInterest
             );
         }
 
         return new RepaymentDTO(
+            totalMoney: bcadd($repaidPrincipal, $repaidInterest, 2),
+            totalInterest: $repaidInterest,
             schedule: $paymentPlanLists
         );
     }
